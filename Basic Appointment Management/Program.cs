@@ -8,6 +8,8 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
 using System.Text;
 using Basic_Appointment_Management.Data.DTOs;
+using Basic_Appointment_Management.Data.DataInitializer;
+using System.Diagnostics;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -110,5 +112,21 @@ app.UseAuthentication();
 app.UseAuthorization();
 
 app.MapControllers();
+
+using (var scope = app.Services.CreateScope())
+{
+    var serviceProvider = scope.ServiceProvider;
+    try
+    {
+        var userManager = serviceProvider.GetRequiredService<UserManager<User>>();
+        var roleManager = serviceProvider.GetRequiredService<RoleManager<IdentityRole>>();
+        UserAndRoleDataInitializer.SeedData(userManager, roleManager);
+    }
+    catch (Exception ex)
+    {
+        Debug.WriteLine(ex.Message);
+    }
+}
+
 
 app.Run();

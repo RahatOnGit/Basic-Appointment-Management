@@ -73,6 +73,11 @@ namespace Basic_Appointment_Management.Controllers
 
                 var result = await _userManager.CreateAsync(user, model.Password);
 
+                if (result.Succeeded)
+                {
+                    await _userManager.AddToRolesAsync(user, ["General_User"]);
+                }
+
                 if (!result.Succeeded)
                 {
                     _response.Errors = new List<string>();
@@ -153,13 +158,22 @@ namespace Basic_Appointment_Management.Controllers
 
                 }
 
+                var claims = new List<Claim>{new Claim(ClaimTypes.Name, user.UserName)};
+
+                var roles = await _userManager.GetRolesAsync(user);
+
+                foreach (var role in roles)
+                {
+                    claims.Add(new Claim(ClaimTypes.Role, role));
+                }
 
                 var authSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_configuration["JWT:Secret"]));
 
                 var token = new JwtSecurityToken(
                     issuer: _configuration["JWT:ValidIssuer"],
                     audience: _configuration["JWT:ValidAudience"],
-                    expires: DateTime.Now.AddDays(15),
+                    claims: claims,
+                    expires: DateTime.Now.AddDays(3),
                     signingCredentials: new SigningCredentials(authSigningKey, SecurityAlgorithms.HmacSha256)
                     );
 
@@ -167,8 +181,8 @@ namespace Basic_Appointment_Management.Controllers
                 _response.Data = new {
 
 
-                    token = new JwtSecurityTokenHandler().WriteToken(token),
-                    expiration = token.ValidTo
+                    token = new JwtSecurityTokenHandler().WriteToken(token)
+                    
                 };
 
                 return Ok(_response);

@@ -4,6 +4,7 @@ using Basic_Appointment_Management.Data;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -11,9 +12,11 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace Basic_Appointment_Management.Migrations
 {
     [DbContext(typeof(AppointmentDbContext))]
-    partial class AppointmentDbContextModelSnapshot : ModelSnapshot
+    [Migration("20250312045648_AddedRolesToDb")]
+    partial class AddedRolesToDb
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -175,19 +178,13 @@ namespace Basic_Appointment_Management.Migrations
                     b.HasData(
                         new
                         {
-                            Id = "f577494f-af9b-49a9-b29a-4e3bf1d9ae92",
-                            Name = "General_User",
-                            NormalizedName = "GENERAL_USER"
-                        },
-                        new
-                        {
-                            Id = "398b03a0-f776-4c6d-9e3c-882108c4c2cd",
+                            Id = "6b4e4238-32ea-4adb-83a0-3557f27235b2",
                             Name = "Manager",
                             NormalizedName = "MANAGER"
                         },
                         new
                         {
-                            Id = "db38f100-1232-40ff-b48f-d23ba4d25614",
+                            Id = "f9776bde-7b06-4e17-aaed-dacb52130fae",
                             Name = "Administrator",
                             NormalizedName = "ADMINISTRATOR"
                         });

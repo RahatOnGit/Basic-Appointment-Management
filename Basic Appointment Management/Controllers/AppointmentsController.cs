@@ -29,6 +29,7 @@ namespace Basic_Appointment_Management.Controllers
 
         [HttpPost]
         [Route("/appointments")]
+        
         //[ProducesResponseType(StatusCodes.Status400BadRequest)]
         [ProducesResponseType(StatusCodes.Status500InternalServerError)]
         [ProducesResponseType(StatusCodes.Status201Created)]
@@ -99,13 +100,23 @@ namespace Basic_Appointment_Management.Controllers
 
         [HttpGet]
         [Route("/appointments")]
+        
         [ProducesResponseType(StatusCodes.Status500InternalServerError)]
         [ProducesResponseType(StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status403Forbidden)]
         public async Task<IActionResult> GetAppointments()
         {
             try
             {
-               
+                if (!User.IsInRole("Administrator"))
+                {
+                    _response.Status = HttpStatusCode.Forbidden;
+                    _response.Message = "You don't have permission to access it";
+
+                    return StatusCode(StatusCodes.Status403Forbidden, _response);
+
+                }
+
 
                 var allAppointments = await _dbContext.Appointments.OrderBy(x => x.DateAndTime).Include(c => c.TheDoctor).ToListAsync();
 

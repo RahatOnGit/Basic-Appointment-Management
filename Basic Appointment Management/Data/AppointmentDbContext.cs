@@ -22,6 +22,8 @@ namespace Basic_Appointment_Management.Data
             base.OnModelCreating(modelBuilder);
 
             modelBuilder.ApplyConfiguration(new DoctorConfig());
+
+            modelBuilder.ApplyConfiguration(new RoleConfig());
         }
     }
 }
